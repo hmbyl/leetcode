@@ -46,3 +46,9 @@ func newListNode(nums []int) *ListNode {
 func Test_lengthOfLongestSubstring(t *testing.T) {
 	t.Log(lengthOfLongestSubstring("abcdeafb"))
 }
+
+func Test_longestPalindrome(t *testing.T) {
+	//t.Log(longestPalindrome("babad"))
+	//t.Log(longestPalindrome("cbbd"))
+	t.Log(longestPalindrome("bb"))
+}

@@ -107,3 +107,43 @@ func max(x, y int) int {
 	}
 	return x
 }
+
+/*
+最长回文子串
+https://leetcode.cn/problems/longest-palindromic-substring/description/
+示例 1：
+
+输入：s = "babad"
+输出："bab"
+解释："aba" 同样是符合题意的答案。
+*/
+func longestPalindrome(s string) string {
+	n := len(s)
+	dp := make([][]int, n)
+	for i, _ := range dp {
+		dp[i] = make([]int, n)
+	}
+	begin := 0
+	length := 1
+	for strLength := 1; strLength <= n; strLength++ {
+
+		for i, _ := range s {
+			j := i + strLength - 1
+			if j >= n {
+				break
+			}
+			if strLength <= 3 {
+				if s[i] == s[j] {
+					dp[i][j] = 1
+				}
+			} else if dp[i+1][j-1] == 1 && s[i] == s[j] {
+				dp[i][j] = 1
+			}
+			if dp[i][j] == 1 && strLength > length {
+				length = strLength
+				begin = i
+			}
+		}
+	}
+	return s[begin : begin+length]
+}
