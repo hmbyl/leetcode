@@ -52,3 +52,20 @@ func Test_longestPalindrome(t *testing.T) {
 	//t.Log(longestPalindrome("cbbd"))
 	t.Log(longestPalindrome("bb"))
 }
+
+func Test_reverse(t *testing.T) {
+	t.Log(reverse(1534236469))
+	t.Log(reverse(-456))
+}
+
+func Test_maxArea(t *testing.T) {
+	t.Log(maxArea([]int{1, 8, 6, 2, 5, 4, 8, 3, 7}))
+}
+
+func Test_romanToInt(t *testing.T) {
+	t.Log(romanToInt("LVIII"))
+}
+
+func Test_longestCommonPrefix(t *testing.T) {
+	t.Log(longestCommonPrefix([]string{"ab", "a"}))
+}

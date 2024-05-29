@@ -11,6 +11,125 @@ func main() {
 }
 
 /*
+最长公共前缀
+https://leetcode.cn/problems/longest-common-prefix/description/
+输入：strs = ["flower","flow","flight"]
+输出："fl"
+*/
+func longestCommonPrefix(strs []string) string {
+	var res string
+	if len(strs) == 0 {
+		return res
+	}
+	if len(strs) == 1 {
+		return strs[0]
+	}
+	length := len(strs[0])
+	for l := 1; l <= length; l++ {
+		for i := 1; i < len(strs); i++ {
+			if l > len(strs[i]) {
+				return res
+			}
+			if strs[0][l-1] != strs[i][l-1] {
+				return res
+			}
+
+		}
+		res = strs[0][:l]
+	}
+	return res
+}
+
+/*
+罗马数字转整数
+https://leetcode.cn/problems/roman-to-integer/description/
+字符          数值
+I             1
+V             5
+X             10
+L             50
+C             100
+D             500
+M             1000
+*/
+func romanToInt(s string) int {
+	m := map[byte]int{
+		'I': 1,
+		'V': 5,
+		'X': 10,
+		'L': 50,
+		'C': 100,
+		'D': 500,
+		'M': 1000,
+	}
+	var res int
+	for i, _ := range s {
+		letter := s[i]
+		num := m[letter]
+		if i > 0 {
+			lastNum := m[s[i-1]]
+			if num > lastNum {
+				res -= 2 * lastNum
+			}
+			res += num
+		} else {
+			res += num
+		}
+	}
+	return res
+}
+
+/*
+盛最多水的容器
+https://leetcode.cn/problems/container-with-most-water/description/
+输入：[1,8,6,2,5,4,8,3,7]
+输出：49
+*/
+func maxArea(height []int) int {
+	left := 0
+	right := len(height) - 1
+	m := 0
+	for left < right {
+		h1 := height[left]
+		h2 := height[right]
+		m = max(m, min(h1, h2)*(right-left))
+		if h1 < h2 {
+			left++
+		} else {
+			right--
+		}
+	}
+	return m
+}
+
+/*
+整数反转
+https://leetcode.cn/problems/reverse-integer/description/
+输入：x = 123
+输出：321
+*/
+func reverse(x int) int {
+	var res int
+	var flag bool
+	if x < 0 {
+		flag = true
+		x = -x
+	}
+	for x > 0 {
+		tmp := x % 10
+		res = res*10 + tmp
+		x = x / 10
+	}
+	if flag {
+		res = -res
+	}
+	if res < -1<<31 || res > (1<<31-1) {
+		res = 0
+	}
+	return res
+}
+
+/*
 两数之和
 https://leetcode.cn/problems/two-sum/submissions/217515930/
 输入：nums = [2,7,11,15], target = 9
@@ -106,6 +225,13 @@ func max(x, y int) int {
 		return y
 	}
 	return x
+}
+
+func min(x, y int) int {
+	if x < y {
+		return x
+	}
+	return y
 }
 
 /*
