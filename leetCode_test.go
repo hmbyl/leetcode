@@ -21,28 +21,6 @@ func Test_addTwoNumbers(t *testing.T) {
 
 }
 
-func getListNode(l *ListNode) []int {
-	var nums []int
-	for l != nil {
-		nums = append(nums, l.Val)
-		l = l.Next
-	}
-	return nums
-}
-
-func newListNode(nums []int) *ListNode {
-	head := new(ListNode)
-	node := head
-	for i, v := range nums {
-		node.Val = v
-		if i != len(nums)-1 {
-			node.Next = new(ListNode)
-			node = node.Next
-		}
-	}
-	return head
-}
-
 func Test_lengthOfLongestSubstring(t *testing.T) {
 	t.Log(lengthOfLongestSubstring("abcdeafb"))
 }
@@ -76,4 +54,26 @@ func Test_threeSum(t *testing.T) {
 
 func Test_letterCombinations(t *testing.T) {
 	t.Log(letterCombinations("23"))
+}
+
+func Test_removeNthFromEnd(t *testing.T) {
+	listNode := newListNode([]int{1, 2, 3, 4, 5})
+	t.Log(getListNode(removeNthFromEnd(listNode, 5)))
+
+}
+
+func Test_isValid(t *testing.T) {
+	t.Log(isValid("[{}]"))
+	t.Log(isValid("{{]]"))
+	t.Log(isValid("{()[]}"))
+}
+
+func Test_mergeTwoLists(t *testing.T) {
+	l1 := newListNode([]int{1, 2, 4})
+	l2 := newListNode([]int{1, 3, 4})
+	t.Log(getListNode(mergeTwoLists(l1, l2)))
+}
+
+func Test_generateParenthesis(t *testing.T) {
+	t.Log(generateParenthesis(3))
 }

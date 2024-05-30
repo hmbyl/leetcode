@@ -12,6 +12,133 @@ func main() {
 }
 
 /*
+括号生成
+https://leetcode.cn/problems/generate-parentheses/description/
+示例 1：
+
+输入：n = 3
+输出：["((()))","(()())","(())()","()(())","()()()"]
+示例 2：
+
+输入：n = 1
+输出：["()"]
+*/
+
+func generateParenthesis(n int) []string {
+	var gen func(left, right, n int, tmp string)
+	var res []string
+	gen = func(left, right, n int, tmp string) {
+		if left == n && right == n {
+			res = append(res, tmp)
+			return
+		}
+		if left < n {
+			gen(left+1, right, n, tmp+"(")
+		}
+		if right < left && right < n {
+			gen(left, right+1, n, tmp+")")
+
+		}
+	}
+	gen(0, 0, n, "")
+	return res
+}
+
+/*
+合并两个有序链表
+https://leetcode.cn/problems/merge-two-sorted-lists/submissions/211224633/
+输入：l1 = [1,2,4], l2 = [1,3,4]
+输出：[1,1,2,3,4,4]
+*/
+
+func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
+	if l1 == nil {
+		return l2
+	}
+	if l2 == nil {
+		return l1
+	}
+	if l1.Val < l2.Val {
+		l1.Next = mergeTwoLists(l1.Next, l2)
+		return l1
+	} else {
+		l2.Next = mergeTwoLists(l2.Next, l1)
+		return l2
+	}
+}
+
+/*
+有效的括号
+https://leetcode.cn/problems/valid-parentheses/description/
+示例 1：
+
+输入：s = "()"
+输出：true
+示例 2：
+
+输入：s = "()[]{}"
+输出：true
+*/
+func isValid(s string) bool {
+	m := map[byte]byte{
+		'(': ')',
+		'[': ']',
+		'{': '}',
+	}
+	var queue []byte
+	for _, v := range s {
+		d := byte(v)
+		if _, ok := m[d]; ok {
+			queue = append(queue, d)
+		} else {
+			if len(queue) == 0 {
+				return false
+			}
+			if m[queue[len(queue)-1]] == d {
+				queue = queue[:len(queue)-1]
+			} else {
+				return false
+			}
+		}
+
+	}
+	return len(queue) == 0
+}
+
+/*
+删除链表的倒数第 N 个结点
+https://leetcode.cn/problems/remove-nth-node-from-end-of-list/description/
+输入：head = [1,2,3,4,5], n = 2
+输出：[1,2,3,5]
+*/
+
+func removeNthFromEnd(head *ListNode, n int) *ListNode {
+	node := head
+	lenght := 0
+	for node != nil {
+		node = node.Next
+		lenght++
+	}
+	removeIdx := lenght - n
+	if removeIdx < 0 {
+		return head
+	}
+	if removeIdx == 0 {
+		head = head.Next
+		return head
+	}
+	idx := 0
+	node = head
+	for idx < removeIdx-1 {
+		node = node.Next
+		idx++
+	}
+	node.Next = node.Next.Next
+	return head
+
+}
+
+/*
  电话号码的字母组合
 https://leetcode.cn/problems/letter-combinations-of-a-phone-number/description/
 输入：digits = "23"
@@ -237,10 +364,6 @@ https://leetcode.cn/problems/add-two-numbers/description/
 输出：[7,0,8]
 解释：342 + 465 = 807.
 */
-type ListNode struct {
-	Val  int
-	Next *ListNode
-}
 
 func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
 	head := new(ListNode)
@@ -301,20 +424,6 @@ func lengthOfLongestSubstring(s string) int {
 		res = max(res, rk-i)
 	}
 	return res
-}
-
-func max(x, y int) int {
-	if x < y {
-		return y
-	}
-	return x
-}
-
-func min(x, y int) int {
-	if x < y {
-		return x
-	}
-	return y
 }
 
 /*
