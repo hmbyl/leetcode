@@ -69,3 +69,11 @@ func Test_romanToInt(t *testing.T) {
 func Test_longestCommonPrefix(t *testing.T) {
 	t.Log(longestCommonPrefix([]string{"ab", "a"}))
 }
+
+func Test_threeSum(t *testing.T) {
+	t.Log(threeSum([]int{-1, 0, 1, 2, -1, -4}))
+}
+
+func Test_letterCombinations(t *testing.T) {
+	t.Log(letterCombinations("23"))
+}

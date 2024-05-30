@@ -2,12 +2,95 @@ package main
 
 import (
 	"fmt"
+	"sort"
 )
 
 func main() {
 	nums := []int{2, 7, 11, 15}
 	target := 9
 	fmt.Println(twoSum(nums, target))
+}
+
+/*
+ 电话号码的字母组合
+https://leetcode.cn/problems/letter-combinations-of-a-phone-number/description/
+输入：digits = "23"
+输出：["ad","ae","af","bd","be","bf","cd","ce","cf"]
+
+*/
+
+func letterCombinations(digits string) []string {
+	m := map[byte][]string{
+		'1': {},
+		'2': {"a", "b", "c"},
+		'3': {"d", "e", "f"},
+		'4': {"g", "h", "i"},
+		'5': {"j", "k", "l"},
+		'6': {"m", "n", "o"},
+		'7': {"p", "q", "r", "s"},
+		'8': {"t", "u", "v"},
+		'9': {"w", "x", "y", "z"},
+	}
+	var res []string
+	if len(digits) == 0 {
+		return res
+	}
+	var backTrack func(level int, tmp string)
+	backTrack = func(level int, tmp string) {
+		if level == len(digits) {
+			res = append(res, tmp)
+			return
+		}
+		for _, d := range m[digits[level]] {
+			newTmp := tmp + d
+			backTrack(level+1, newTmp)
+		}
+
+	}
+	backTrack(0, "")
+	return res
+}
+
+/*
+三数之和
+https://leetcode.cn/problems/3sum/description/
+输入：nums = [-1,0,1,2,-1,-4]
+输出：[[-1,-1,2],[-1,0,1
+*/
+func threeSum(nums []int) [][]int {
+	sort.Ints(nums)
+	fmt.Println(nums)
+	var res [][]int
+	for i, num := range nums {
+		if i > 0 && nums[i] == nums[i-1] {
+			continue
+		}
+		l := i + 1
+		r := len(nums) - 1
+		for {
+			if l >= r {
+				break
+			}
+			fmt.Println(l, r)
+			sum := num + nums[l] + nums[r]
+			if sum == 0 {
+				res = append(res, []int{num, nums[l], nums[r]})
+				for l < r && nums[l] == nums[l+1] {
+					l++
+				}
+				for l < r && nums[r] == nums[r-1] {
+					r--
+				}
+				l++
+				r--
+			} else if sum > 0 {
+				r--
+			} else {
+				l++
+			}
+		}
+	}
+	return res
 }
 
 /*
