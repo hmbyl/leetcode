@@ -123,3 +123,56 @@ func Test_maxSubArray(t *testing.T) {
 	t.Log(maxSubArray([]int{5, 4, -1, 7, 8}))
 
 }
+
+func Test_spiralOrder(t *testing.T) {
+	t.Log(spiralOrder([][]int{
+		{1, 2, 3, 4},
+		{5, 6, 7, 8},
+		{9, 10, 11, 12},
+		{13, 14, 15, 16},
+	}))
+	t.Log(spiralOrder([][]int{
+		{3},
+		{2},
+	}))
+}
+
+func Test_canJump(t *testing.T) {
+	t.Log(canJump([]int{2, 3, 1, 1, 4}))
+	t.Log(canJump([]int{3, 2, 1, 0, 4}))
+}
+
+func Test_plusOne(t *testing.T) {
+	t.Log(plusOne([]int{1, 2, 3}))
+	t.Log(plusOne([]int{9, 9, 9}))
+}
+
+func Test_addBinary(t *testing.T) {
+	t.Log(addBinary("101", "11"))
+	t.Log(addBinary("1010", "1011"))
+}
+
+func Test_climbStairs(t *testing.T) {
+	t.Log(climbStairs(3))
+}
+
+func Test_setZeroes(t *testing.T) {
+	arr := [][]int{
+		{1, 1, 1},
+		{1, 0, 1},
+		{1, 1, 1},
+	}
+	setZeroes(arr)
+	t.Log(arr)
+}
+
+func Test_merge(t *testing.T) {
+	nums1 := []int{1, 2, 3, 0, 0, 0}
+	nums2 := []int{2, 5, 6}
+	merge(nums1, 3, nums2, 3)
+	t.Log(nums1)
+}
+
+func Test_subsetsWithDup(t *testing.T) {
+	t.Log(subsetsWithDup([]int{4, 4, 4, 1, 4}))
+}

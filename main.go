@@ -12,6 +12,304 @@ func main() {
 }
 
 /*
+子集
+https://leetcode.cn/problems/subsets-ii/description/
+示例 1：
+
+输入：nums = [1,2,2]
+输出：[[],[1],[1,2],[1,2,2],[2],[2,2]]
+示例 2：
+
+输入：nums = [0]
+输出：[[],[0]]
+*/
+func subsetsWithDup(nums []int) [][]int {
+	var res [][]int
+	l := len(nums)
+	res = append(res, []int{})
+	if len(nums) == 0 {
+		return res
+	}
+	m := make(map[string]int)
+	var backTrack func(length, beginIdx int, tmp []int)
+	backTrack = func(length, beginIdx int, tmp []int) {
+		if length == len(tmp) {
+			if beginIdx > len(nums) {
+				return
+			}
+			sort.Ints(tmp)
+			var key string
+			for _, v := range tmp {
+				key += fmt.Sprintf("%v", v)
+			}
+			if _, ok := m[key]; !ok {
+				res = append(res, tmp)
+				m[key] = 1
+			}
+			return
+		}
+		for i := beginIdx; i < len(nums); i++ {
+			newTmp := make([]int, len(tmp))
+			copy(newTmp, tmp)
+			newTmp = append(newTmp, nums[i])
+			backTrack(length, i+1, newTmp)
+		}
+
+	}
+	for length := 1; length <= l; length++ {
+		backTrack(length, 0, []int{})
+	}
+	//backTrack(4, 0, []int{})
+	return res
+}
+
+/*
+合并两个有序数组
+https://leetcode.cn/problems/merge-sorted-array/description/
+示例 1：
+
+输入：nums1 = [1,2,3,0,0,0], m = 3, nums2 = [2,5,6], n = 3
+输出：[1,2,2,3,5,6]
+解释：需要合并 [1,2,3] 和 [2,5,6] 。
+合并结果是 [1,2,2,3,5,6] ，其中斜体加粗标注的为 nums1 中的元素。
+示例 2：
+
+输入：nums1 = [1], m = 1, nums2 = [], n = 0
+输出：[1]
+解释：需要合并 [1] 和 [] 。
+合并结果是 [1] 。
+*/
+func merge(nums1 []int, m int, nums2 []int, n int) {
+	copy(nums1[m:], nums2)
+	sort.Ints(nums1)
+}
+
+/*
+矩阵置零
+https://leetcode.cn/problems/set-matrix-zeroes/description/
+输入：matrix = [[1,1,1],[1,0,1],[1,1,1]]
+输出：[[1,0,1],[0,0,0],[1,0,1]]
+*/
+func setZeroes(matrix [][]int) {
+	var xArr, yArr []int
+	for y, row := range matrix {
+		for x, num := range row {
+			if num == 0 {
+				xArr = append(xArr, x)
+				yArr = append(yArr, y)
+			}
+		}
+	}
+	for y, row := range matrix {
+		for x, _ := range row {
+			for _, tmpX := range xArr {
+				if x == tmpX {
+					matrix[y][x] = 0
+				}
+			}
+			for _, tmpY := range yArr {
+				if y == tmpY {
+					matrix[y][x] = 0
+				}
+			}
+		}
+	}
+}
+
+/*
+爬楼梯
+https://leetcode.cn/problems/climbing-stairs/description/
+示例 1：
+
+输入：n = 2
+输出：2
+解释：有两种方法可以爬到楼顶。
+1. 1 阶 + 1 阶
+2. 2 阶
+示例 2：
+
+输入：n = 3
+输出：3
+解释：有三种方法可以爬到楼顶。
+1. 1 阶 + 1 阶 + 1 阶
+2. 1 阶 + 2 阶
+3. 2 阶 + 1 阶
+*/
+func climbStairs(n int) int {
+	dp := make([]int, n+1)
+	dp[0] = 1
+	dp[1] = 1
+	if n >= 2 {
+		for i := 2; i <= n; i++ {
+			dp[i] = dp[i-1] + dp[i-2]
+		}
+	}
+	return dp[n]
+}
+
+/*
+二进制求和
+https://leetcode.cn/problems/add-binary/description/
+示例 1：
+
+输入:a = "11", b = "1"
+输出："100"
+示例 2：
+
+输入：a = "1010", b = "1011"
+输出："10101"
+*/
+
+func addBinary(a string, b string) string {
+	idxA := len(a) - 1
+	idxB := len(b) - 1
+	carry := 0
+	var res string
+	for idxA >= 0 || idxB >= 0 {
+		aNum := 0
+		bNum := 0
+		if idxA >= 0 {
+			aNum = int(a[idxA] - '0')
+			idxA--
+		}
+		if idxB >= 0 {
+			bNum = int(b[idxB] - '0')
+			idxB--
+		}
+		sum := aNum + bNum + carry
+		res = fmt.Sprintf("%v%v", sum%2, res)
+		carry = sum / 2
+	}
+	if carry > 0 {
+		res = fmt.Sprintf("%v%v", carry, res)
+
+	}
+	return res
+}
+
+/*
+加1
+示例 1：
+
+输入：digits = [1,2,3]
+输出：[1,2,4]
+解释：输入数组表示数字 123。
+示例 2：
+
+输入：digits = [4,3,2,1]
+输出：[4,3,2,2]
+解释：输入数组表示数字 4321。
+示例 3：
+
+输入：digits = [0]
+输出：[1]
+
+https://leetcode.cn/problems/plus-one/description/
+*/
+func plusOne(digits []int) []int {
+	carry := 0
+	for idx := len(digits) - 1; idx >= 0; idx-- {
+		num := digits[idx]
+		sum := num + carry
+		if idx == len(digits)-1 {
+			sum++
+		}
+		carry = sum / 10
+		digits[idx] = sum % 10
+	}
+	var res []int
+	if carry > 0 {
+		res = make([]int, len(digits)+1)
+		res[0] = carry
+		copy(res[1:], digits)
+	} else {
+		res = make([]int, len(digits))
+		copy(res, digits)
+	}
+	return res
+}
+
+/*
+跳跃游戏
+https://leetcode.cn/problems/jump-game/solutions/203549/tiao-yue-you-xi-by-leetcode-solution/
+示例 1：
+
+输入：nums = [2,3,1,1,4]
+输出：true
+解释：可以先跳 1 步，从下标 0 到达下标 1, 然后再从下标 1 跳 3 步到达最后一个下标。
+示例 2：
+
+输入：nums = [3,2,1,0,4]
+输出：false
+解释：无论怎样，总会到达下标为 3 的位置。但该下标的最大跳跃长度是 0 ， 所以永远不可能到达最后一个下标。
+*/
+func canJump(nums []int) bool {
+	rightMost := 0
+	for i, _ := range nums {
+		if i > 0 {
+			rightMost = max(rightMost, i-1+nums[i-1])
+			if rightMost < i {
+				return false
+			}
+		}
+	}
+	return true
+}
+
+/*
+螺旋矩阵
+https://leetcode.cn/problems/spiral-matrix/description/
+输入：matrix = [[1,2,3],[4,5,6],[7,8,9]]
+输出：[1,2,3,6,9,8,7,4,5]
+
+*/
+func spiralOrder(matrix [][]int) []int {
+	var res []int
+	if len(matrix) == 0 {
+		return res
+	}
+	maxY := len(matrix) - 1
+	maxX := len(matrix[0]) - 1
+	minY, minX := 0, 0
+	x, y := -1, 0
+	direct := ""
+	total := (maxX + 1) * (maxY + 1)
+	for len(res) < total {
+
+		if direct == "" {
+			direct = "right"
+			minY++
+		} else if direct == "right" && x == maxX {
+			maxX--
+			direct = "down"
+		} else if direct == "down" && y == maxY {
+			maxY--
+			direct = "left"
+		} else if direct == "left" && x == minX {
+			minX++
+			direct = "up"
+		} else if direct == "up" && y == minY {
+			minY++
+			direct = "right"
+		}
+		switch direct {
+		case "right":
+			x++
+		case "down":
+			y++
+		case "left":
+			x--
+		case "up":
+			y--
+		}
+		val := matrix[y][x]
+		res = append(res, val)
+
+	}
+	return res
+}
+
+/*
 最大子数组和
 https://leetcode.cn/problems/maximum-subarray/
 示例 1：
