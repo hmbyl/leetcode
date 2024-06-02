@@ -12,6 +12,225 @@ func main() {
 }
 
 /*
+最大子数组和
+https://leetcode.cn/problems/maximum-subarray/
+示例 1：
+
+输入：nums = [-2,1,-3,4,-1,2,1,-5,4]
+输出：6
+解释：连续子数组 [4,-1,2,1] 的和最大，为 6
+*/
+func maxSubArray(nums []int) int {
+	dp := make([]int, len(nums))
+	if len(nums) == 0 {
+		return 0
+	}
+	if len(nums) == 1 {
+		return nums[0]
+	}
+	m := nums[0]
+	dp[0] = m
+	for i := 1; i < len(nums); i++ {
+		dp[i] = max(dp[i-1]+nums[i], nums[i])
+		m = max(m, dp[i])
+	}
+	return m
+}
+
+/*
+https://leetcode.cn/problems/powx-n/description/
+输入：x = 2.00000, n = 10
+输出：1024.00000
+输入：x = 2.00000, n = -2
+输出：0.25000
+*/
+func myPow(x float64, n int) float64 {
+	flag := false
+	if n < 0 {
+		n = -n
+		flag = true
+	}
+	var res float64
+	if n == 1 {
+		res = x
+	} else if n == 0 {
+		return 1
+	} else {
+		tmpRes := myPow(x, n/2)
+		if n%2 == 0 {
+			res = tmpRes * tmpRes
+		} else {
+			res = tmpRes * tmpRes * x
+		}
+	}
+	if flag {
+		return 1 / res
+	}
+	return res
+}
+
+/*
+旋转图像
+https://leetcode.cn/problems/rotate-image/
+输入：matrix = [[1,2,3],[4,5,6],[7,8,9]]
+输出：[[7,4,1],[8,5,2],[9,6,3]]
+*/
+func rotate(matrix [][]int) {
+	l := len(matrix)
+	newMtrix := make([][]int, l)
+	for i, _ := range newMtrix {
+		newMtrix[i] = make([]int, l)
+	}
+	for i := 0; i < l; i++ {
+		for j := l - 1; j >= 0; j-- {
+			v := matrix[j][i]
+			newMtrix[i][l-1-j] = v
+		}
+	}
+	fmt.Println(newMtrix)
+	copy(matrix, newMtrix)
+}
+
+/*
+全排列
+https://leetcode.cn/problems/permutations/description/
+输入：nums = [1,2,3]
+输出：[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
+*/
+func permute(nums []int) [][]int {
+	var res [][]int
+	var backTrack func(ignoreIndex, tmp []int)
+	backTrack = func(ignoreIndexArr, tmp []int) {
+		if len(tmp) == len(nums) {
+			res = append(res, tmp)
+			return
+		}
+		for i, v := range nums {
+			find := false
+			for _, ignoreIndex := range ignoreIndexArr {
+				if ignoreIndex == i {
+					find = true
+				}
+			}
+			if !find {
+				newIgnoreIndexArr := append(ignoreIndexArr, i)
+				newTmp := append(tmp, v)
+				backTrack(newIgnoreIndexArr, newTmp)
+			}
+		}
+	}
+	backTrack([]int{}, []int{})
+	return res
+}
+
+/*
+字符串相乘
+https://leetcode.cn/problems/multiply-strings/description/
+输入: num1 = "123", num2 = "12"
+输出: "1476" 123*10=1230+123*2=246 =1476
+*/
+func multiply(num1 string, num2 string) string {
+	return ""
+}
+
+/*
+找出字符串中第一个匹配项的下标
+https://leetcode.cn/problems/find-the-index-of-the-first-occurrence-in-a-string/description/
+入：haystack = "sadbutsad", needle = "sad"
+输出：0
+解释："sad" 在下标 0 和 6 处匹配。
+第一个匹配项的下标是 0 ，所以返回 0
+*/
+func strStr(haystack string, needle string) int {
+	if len(needle) > len(haystack) {
+		return -1
+	}
+	if haystack == needle {
+		return 0
+	}
+	idx := -1
+	for i := 0; i <= len(haystack)-len(needle); i++ {
+		for q, v2 := range needle {
+			v1 := haystack[q+i]
+			if v1 != byte(v2) {
+				idx = -1
+				break
+			} else if idx == -1 {
+				idx = i
+			}
+			if q == len(needle)-1 {
+				return idx
+			}
+		}
+	}
+	return idx
+}
+
+/*
+移除元素
+https://leetcode.cn/problems/remove-element/description/
+输入：nums = [3,2,2,3], val = 3
+输出：2, nums = [2,2,_,_]
+*/
+func removeElement(nums []int, val int) int {
+	left := 0
+	for _, v := range nums {
+		if v != val {
+			nums[left] = v
+			left++
+		}
+	}
+	return left
+}
+
+/*
+删除有序数组中的重复项
+https://leetcode.cn/problems/remove-duplicates-from-sorted-array/description/
+输入：nums = [0,0,1,1,1,2,2,3,3,4]
+输出：5, nums = [0,1,2,3,4]
+*/
+func removeDuplicates(nums []int) int {
+	if len(nums) == 0 {
+		return 0
+	}
+	if len(nums) == 1 {
+		return 1
+	}
+	slow := 0
+	fast := 1
+	for fast < len(nums) {
+		if nums[slow] == nums[fast] {
+			fast++
+		} else {
+			nums[slow+1] = nums[fast]
+			fast++
+			slow++
+		}
+	}
+	return slow + 1
+}
+
+/*
+两两交换链表中的节点
+https://leetcode.cn/problems/swap-nodes-in-pairs/description/
+输入：head = [1,2,3,4]
+输出：[2,1,4,3]
+*/
+func swapPairs(head *ListNode) *ListNode {
+	newHead := &ListNode{0, head}
+	tmp := newHead
+	for tmp.Next != nil && tmp.Next.Next != nil {
+		n1 := tmp.Next
+		n2 := tmp.Next.Next
+		tmp.Next = n2
+		n1.Next = n2.Next
+		n2.Next = n1
+		tmp = n1
+	}
+	return newHead.Next
+}
+
+/*
 括号生成
 https://leetcode.cn/problems/generate-parentheses/description/
 示例 1：
