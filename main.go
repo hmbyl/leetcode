@@ -13,6 +13,204 @@ func main() {
 }
 
 /*
+乘积最大子数组
+https://leetcode.cn/problems/maximum-product-subarray/
+输入: nums = [2,3,-2,4]
+输出: 6
+解释: 子数组 [2,3] 有最大乘积 6。
+*/
+func maxProduct(nums []int) int {
+	maxdp := make([]int, len(nums))
+	mindp := make([]int, len(nums))
+	maxRes := math.MinInt
+	for i, v := range nums {
+		maxdp[i] = v
+		mindp[i] = v
+		if i > 0 {
+			if v > 0 {
+				maxdp[i] = max(maxdp[i], maxdp[i]*maxdp[i-1])
+				mindp[i] = min(mindp[i], mindp[i]*mindp[i-1])
+			} else {
+				maxdp[i] = max(maxdp[i], maxdp[i]*mindp[i-1])
+				mindp[i] = min(mindp[i], mindp[i]*maxdp[i-1])
+
+			}
+		}
+		maxRes = max(maxRes, maxdp[i])
+	}
+	return maxRes
+}
+
+/*
+排序链表
+https://leetcode.cn/problems/sort-list/
+输入：head = [4,2,1,3]
+输出：[1,2,3,4]
+
+*/
+func sortList(head *ListNode) *ListNode {
+	if head == nil {
+		return nil
+	}
+	var arr []int
+	node := head
+	for node != nil {
+		arr = append(arr, node.Val)
+		node = node.Next
+	}
+	sort.Ints(arr)
+	newHead := new(ListNode)
+	node = newHead
+	for i, v := range arr {
+		node.Val = v
+		if i != len(arr)-1 {
+			node.Next = new(ListNode)
+			node = node.Next
+		}
+	}
+	return newHead
+}
+
+/*
+环形链表
+https://leetcode.cn/problems/linked-list-cycle/description/
+*/
+func hasCycle(head *ListNode) bool {
+	dumpy := &ListNode{Val: 0, Next: head}
+	slow, fast := dumpy, dumpy
+
+	for slow != nil && fast != nil {
+
+		slow = slow.Next
+		if fast.Next != nil {
+			fast = fast.Next.Next
+		} else {
+			fast = nil
+		}
+		if slow == fast && slow != nil && fast != nil {
+			return true
+		}
+	}
+	return false
+}
+
+/*
+只出现一次的数字
+https://leetcode.cn/problems/single-number/description/
+示例 1 ：
+
+输入：nums = [2,2,1]
+输出：1
+示例 2 ：
+
+输入：nums = [4,1,2,1,2]
+输出：4
+示例 3 ：
+
+输入：nums = [1]
+输出：1
+*/
+func singleNumber(nums []int) int {
+	if len(nums) == 1 {
+		return nums[0]
+	}
+	sort.Ints(nums)
+	flag := false
+
+	for i, _ := range nums {
+		if i > 0 {
+			if nums[i] == nums[i-1] {
+				flag = false
+				continue
+			} else {
+				if flag || i == 1 {
+					return nums[i-1]
+				}
+				if i == len(nums)-1 {
+					return nums[i]
+				}
+				flag = true
+			}
+		}
+	}
+	return 0
+}
+
+/*
+最长连续序列
+https://leetcode.cn/problems/longest-consecutive-sequence/description/
+示例 1：
+
+输入：nums = [100,4,200,1,3,2]
+输出：4
+解释：最长数字连续序列是 [1, 2, 3, 4]。它的长度为 4。
+示例 2：
+
+输入：nums = [0,3,7,2,5,8,4,6,0,1]
+输出：9
+1,2,0,1
+0 1 1 2
+*/
+func longestConsecutive(nums []int) int {
+	sort.Ints(nums)
+	dp := make([]int, len(nums))
+	res := 0
+	for i, _ := range nums {
+		if i == 0 {
+			dp[i] = 1
+		} else if nums[i] == nums[i-1] {
+			dp[i] = dp[i-1]
+			continue
+		} else if (nums[i] - nums[i-1]) == 1 {
+			dp[i] = dp[i-1] + 1
+		} else {
+			dp[i] = 1
+		}
+		res = max(res, dp[i])
+	}
+	return res
+}
+
+/*
+验证回文串
+https://leetcode.cn/problems/valid-palindrome/description/
+示例 1：
+
+输入: s = "A man, a plan, a canal: Panama"
+输出：true
+解释："amanaplanacanalpanama" 是回文串。
+*/
+func isPalindrome(s string) bool {
+	if len(s) == 0 {
+		return true
+	}
+	var newStr []byte
+	for _, v := range s {
+		d := byte(v)
+		if 'a' <= d && 'z' >= d {
+			newStr = append(newStr, d)
+		}
+		if '0' <= d && '9' >= d {
+			newStr = append(newStr, d)
+		}
+		if 'A' <= d && 'Z' >= d {
+			d = 'a' + d - 'A'
+			newStr = append(newStr, d)
+		}
+	}
+	fmt.Println(string(newStr))
+	l, r := 0, len(newStr)-1
+	for l <= r {
+		if newStr[l] != newStr[r] {
+			return false
+		}
+		l++
+		r--
+	}
+	return true
+}
+
+/*
 二叉树展开为链表
 https://leetcode.cn/problems/flatten-binary-tree-to-linked-list/
 */

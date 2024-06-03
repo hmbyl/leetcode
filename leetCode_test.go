@@ -233,3 +233,44 @@ func Test_flatten(t *testing.T) {
 	n5.Right = n6
 	flatten(n1)
 }
+
+func Test_isPalindrome(t *testing.T) {
+	t.Log(isPalindrome("0P"))
+}
+
+func Test_longestConsecutive(t *testing.T) {
+	t.Log(longestConsecutive([]int{1, 2, 0, 1}))
+}
+
+func Test_singleNumber(t *testing.T) {
+	//t.Log(singleNumber([]int{2, 2, 1}))
+	t.Log(singleNumber([]int{1, 2, 3, 4, 5, 1, 2, 4, 5}))
+}
+
+func Test_hasCycle(t *testing.T) {
+	n1 := &ListNode{Val: 3}
+	n2 := &ListNode{Val: 2}
+	n3 := &ListNode{Val: 0}
+	n4 := &ListNode{Val: -4}
+	n1.Next = n2
+	n2.Next = n3
+	n3.Next = n4
+	n4.Next = n2
+	t.Log(hasCycle(nil))
+
+}
+
+func Test_sortList(t *testing.T) {
+	n1 := &ListNode{Val: 4}
+	n2 := &ListNode{Val: 2}
+	n3 := &ListNode{Val: 1}
+	n4 := &ListNode{Val: 3}
+	n1.Next = n2
+	n2.Next = n3
+	n3.Next = n4
+	t.Log(getListNode(sortList(n1)))
+}
+
+func Test_maxProduct(t *testing.T) {
+	t.Log(maxProduct([]int{-2, 3, -4}))
+}
