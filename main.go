@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"sort"
 )
 
@@ -9,6 +10,285 @@ func main() {
 	nums := []int{2, 7, 11, 15}
 	target := 9
 	fmt.Println(twoSum(nums, target))
+}
+
+/*
+二叉树展开为链表
+https://leetcode.cn/problems/flatten-binary-tree-to-linked-list/
+*/
+func flatten(root *TreeNode) {
+	cur := root
+	var res []int
+	var backTrack func(node *TreeNode)
+	backTrack = func(node *TreeNode) {
+		if node == nil {
+			return
+		}
+		res = append(res, node.Val)
+		backTrack(node.Left)
+		backTrack(node.Right)
+	}
+	backTrack(root)
+	for i, v := range res {
+		cur.Val = v
+		if i != len(res)-1 {
+			cur.Right = new(TreeNode)
+			cur.Left = nil
+			cur = cur.Right
+		}
+	}
+}
+
+/*
+二叉树路径总和 二
+https://leetcode.cn/problems/path-sum-ii/
+*/
+func pathSum(root *TreeNode, targetSum int) [][]int {
+	var backTrack func(node *TreeNode, tmpSum int, tmpNodes []int)
+
+	var res [][]int
+	backTrack = func(node *TreeNode, tmpSum int, tmpNodes []int) {
+		if node == nil {
+			return
+		}
+		val := node.Val
+		tmpSum = tmpSum + val
+		tmpNodes = append(tmpNodes, val)
+		if tmpSum == targetSum && node.Left == nil && node.Right == nil {
+			res = append(res, tmpNodes)
+			return
+		}
+		newTmpNodes1 := make([]int, len(tmpNodes))
+		copy(newTmpNodes1, tmpNodes)
+		newTmpNodes2 := make([]int, len(tmpNodes))
+		copy(newTmpNodes2, tmpNodes)
+		backTrack(node.Left, tmpSum, newTmpNodes1)
+		backTrack(node.Right, tmpSum, newTmpNodes2)
+	}
+	backTrack(root, 0, []int{})
+	return res
+}
+
+/*
+二叉树路径总和
+https://leetcode.cn/problems/path-sum/
+*/
+func hasPathSum(root *TreeNode, targetSum int) bool {
+	var backTrack func(node *TreeNode, tmpSum int)
+
+	var res bool
+	backTrack = func(node *TreeNode, tmpSum int) {
+		if node == nil {
+			return
+		}
+		val := node.Val
+		tmpSum = tmpSum + val
+		if tmpSum == targetSum && node.Left == nil && node.Right == nil {
+			res = true
+			return
+		}
+		backTrack(node.Left, tmpSum)
+		backTrack(node.Right, tmpSum)
+	}
+	backTrack(root, 0)
+	return res
+}
+
+/*
+二叉树最小深度
+https://leetcode.cn/problems/minimum-depth-of-binary-tree/
+*/
+func minDepth(root *TreeNode) int {
+	var depth int
+	if root == nil {
+		return depth
+	}
+	queue := []*TreeNode{root}
+	for len(queue) > 0 {
+		depth++
+		var newQueue []*TreeNode
+		for _, node := range queue {
+			if node.Left == nil && node.Right == nil {
+				return depth
+			}
+			if node.Left != nil {
+				newQueue = append(newQueue, node.Left)
+			}
+			if node.Right != nil {
+				newQueue = append(newQueue, node.Right)
+			}
+		}
+		queue = newQueue
+	}
+	return depth
+}
+
+/*
+将有序数组转化为二叉搜索树
+https://leetcode.cn/problems/convert-sorted-array-to-binary-search-tree/description/
+*/
+func sortedArrayToBST(nums []int) *TreeNode {
+	if len(nums) == 0 {
+		return nil
+	}
+	var backTrack func(left, right int) *TreeNode
+	backTrack = func(left, right int) *TreeNode {
+		if left > right {
+			return nil
+		}
+		mid := right - (right-left)/2
+		node := &TreeNode{Val: nums[mid]}
+		node.Left = backTrack(left, mid-1)
+		node.Right = backTrack(mid+1, right)
+		return node
+	}
+	return backTrack(0, len(nums)-1)
+}
+
+/*
+二叉树的层序遍历，自底向上
+https://leetcode.cn/problems/binary-tree-level-order-traversal-ii/description/
+*/
+func levelOrderBottom(root *TreeNode) [][]int {
+	var res [][]int
+	if root == nil {
+		return res
+	}
+	queue := []*TreeNode{root}
+	for len(queue) > 0 {
+		var newQueue []*TreeNode
+		var tmpRes []int
+		for _, node := range queue {
+			tmpRes = append(tmpRes, node.Val)
+			if node.Left != nil {
+				newQueue = append(newQueue, node.Left)
+			}
+			if node.Right != nil {
+				newQueue = append(newQueue, node.Right)
+			}
+		}
+		res = append(res, tmpRes)
+		queue = newQueue
+	}
+	var ret [][]int
+	for i := len(res) - 1; i >= 0; i-- {
+		ret = append(ret, res[i])
+	}
+	return ret
+}
+
+/*
+二叉树的最大深度
+*/
+func maxDepth(root *TreeNode) int {
+	var res int
+	if root == nil {
+		return res
+	}
+	queue := []*TreeNode{root}
+	for len(queue) > 0 {
+		var newQueue []*TreeNode
+		for _, node := range queue {
+			if node.Left != nil {
+				newQueue = append(newQueue, node.Left)
+			}
+			if node.Right != nil {
+				newQueue = append(newQueue, node.Right)
+			}
+		}
+		res++
+		queue = newQueue
+	}
+	return res
+}
+
+/*
+二叉树的程序遍历
+https://leetcode.cn/problems/binary-tree-level-order-traversal/description/
+*/
+func levelOrder(root *TreeNode) [][]int {
+	var res [][]int
+	if root == nil {
+		return res
+	}
+	queue := []*TreeNode{root}
+	for len(queue) > 0 {
+		var newQueue []*TreeNode
+		var tmpRes []int
+		for _, node := range queue {
+			tmpRes = append(tmpRes, node.Val)
+			if node.Left != nil {
+				newQueue = append(newQueue, node.Left)
+			}
+			if node.Right != nil {
+				newQueue = append(newQueue, node.Right)
+			}
+		}
+		res = append(res, tmpRes)
+		queue = newQueue
+	}
+	return res
+}
+
+/*
+对称二叉树
+https://leetcode.cn/problems/symmetric-tree/
+*/
+func isSymmetric(root *TreeNode) bool {
+	var backTrack func(left, right *TreeNode) bool
+	backTrack = func(left, right *TreeNode) bool {
+		if left == nil && right == nil {
+			return true
+		}
+		if left == nil || right == nil {
+			return false
+		}
+		if left.Val != right.Val {
+			return false
+		}
+		return backTrack(left.Left, right.Right) && backTrack(left.Right, right.Left)
+	}
+	return backTrack(root, root)
+}
+
+/*
+验证二叉搜索树
+https://leetcode.cn/problems/validate-binary-search-tree/description/
+输入：root = [2,1,3]
+输出：true
+*/
+func isValidBST(root *TreeNode) bool {
+	var backTrack func(node *TreeNode, lower, upper int64) bool
+	backTrack = func(node *TreeNode, lower, upper int64) bool {
+		if node == nil {
+			return true
+		}
+		val := int64(node.Val)
+		if val >= upper || val <= lower {
+			return false
+		}
+		return backTrack(node.Left, lower, int64(node.Val)) && backTrack(node.Right, int64(node.Val), upper)
+	}
+	return backTrack(root, math.MinInt64, math.MaxInt64)
+
+}
+
+/*
+二叉树的中序遍历
+*/
+func inorderTraversal(root *TreeNode) []int {
+	var res []int
+	var backTrack func(node *TreeNode)
+	backTrack = func(node *TreeNode) {
+		if node == nil {
+			return
+		}
+		backTrack(node.Left)
+		res = append(res, node.Val)
+		backTrack(node.Right)
+	}
+	backTrack(root)
+	return res
 }
 
 /*

@@ -176,3 +176,60 @@ func Test_merge(t *testing.T) {
 func Test_subsetsWithDup(t *testing.T) {
 	t.Log(subsetsWithDup([]int{4, 4, 4, 1, 4}))
 }
+
+func Test_inorderTraversal(t *testing.T) {
+	root := &TreeNode{Val: 1}
+	n1 := &TreeNode{Val: 2}
+	n2 := &TreeNode{Val: 3}
+	root.Right = n1
+	n1.Left = n2
+	t.Log(inorderTraversal(root))
+}
+
+func Test_isValidBST(t *testing.T) {
+	root := &TreeNode{Val: 2}
+	n1 := &TreeNode{Val: 1}
+	n2 := &TreeNode{Val: 3}
+	root.Left = n1
+	root.Right = n2
+	t.Log(isValidBST(root))
+	root = &TreeNode{Val: 5}
+	n1 = &TreeNode{Val: 1}
+	n2 = &TreeNode{Val: 4}
+	n3 := &TreeNode{Val: 3}
+	n4 := &TreeNode{Val: 6}
+	root.Left = n1
+	root.Right = n2
+	n2.Left = n3
+	n2.Right = n4
+	t.Log(isValidBST(root))
+}
+
+func Test_levelOrder(t *testing.T) {
+	root := &TreeNode{Val: 3}
+	n1 := &TreeNode{Val: 9}
+	n2 := &TreeNode{Val: 20}
+	n3 := &TreeNode{Val: 15}
+	n4 := &TreeNode{Val: 7}
+	root.Left = n1
+	root.Right = n2
+	n2.Left = n3
+	n2.Right = n4
+	t.Log(levelOrder(root))
+	t.Log(maxDepth(root))
+}
+
+func Test_flatten(t *testing.T) {
+	n1 := &TreeNode{Val: 1}
+	n2 := &TreeNode{Val: 2}
+	n3 := &TreeNode{Val: 3}
+	n4 := &TreeNode{Val: 4}
+	n5 := &TreeNode{Val: 5}
+	n6 := &TreeNode{Val: 6}
+	n1.Left = n2
+	n1.Right = n5
+	n2.Left = n3
+	n2.Right = n4
+	n5.Right = n6
+	flatten(n1)
+}
