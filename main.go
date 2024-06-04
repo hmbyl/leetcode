@@ -13,6 +13,171 @@ func main() {
 }
 
 /*
+反转字符串
+https://leetcode.cn/problems/reverse-string/
+输入：s = ["h","e","l","l","o"]
+输出：["o","l","l","e","h"]
+*/
+func reverseString(s []byte) {
+	if len(s) == 0 {
+		return
+	}
+	l, r := 0, len(s)-1
+	for l < r {
+		s[l], s[r] = s[r], s[l]
+		l++
+		r--
+	}
+}
+
+/*
+二叉树的最近公共祖先
+https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-tree/
+*/
+func lowestCommonAncestor2(root, p, q *TreeNode) *TreeNode {
+	parentNodesMap := make(map[*TreeNode][]*TreeNode)
+	queue := []*TreeNode{root}
+	for len(queue) > 0 {
+		var newQueue []*TreeNode
+		for _, node := range queue {
+			var tmpParentNodes []*TreeNode
+			if lastParentNodes, ok := parentNodesMap[node]; ok {
+				tmpParentNodes = make([]*TreeNode, len(lastParentNodes))
+				copy(tmpParentNodes, lastParentNodes)
+			}
+			tmpParentNodes = append(tmpParentNodes, node)
+			if node.Left != nil {
+				newQueue = append(newQueue, node.Left)
+				parentNodes := make([]*TreeNode, len(tmpParentNodes))
+				copy(parentNodes, tmpParentNodes)
+				parentNodesMap[node.Left] = parentNodes
+			}
+			if node.Right != nil {
+				newQueue = append(newQueue, node.Right)
+				parentNodes := make([]*TreeNode, len(tmpParentNodes))
+				copy(parentNodes, tmpParentNodes)
+				parentNodesMap[node.Right] = parentNodes
+			}
+		}
+		queue = newQueue
+	}
+	list1 := append(parentNodesMap[p], p)
+	list2 := append(parentNodesMap[q], q)
+	for i := len(list1) - 1; i >= 0; i-- {
+		n1 := list1[i]
+		for j := len(list2) - 1; j >= 0; j-- {
+			n2 := list2[j]
+			if n1 == n2 {
+				return n1
+			}
+		}
+	}
+	return nil
+
+}
+
+/*
+二叉搜索树的最近公共组祖先
+https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-search-tree/
+*/
+func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
+	tmp := root
+	for {
+		val := tmp.Val
+		if p.Val < val && q.Val < val {
+			tmp = tmp.Left
+		} else if p.Val > val && q.Val > val {
+			tmp = tmp.Right
+		} else {
+			return tmp
+		}
+	}
+}
+
+/*
+2的幂
+https://leetcode.cn/problems/power-of-two/
+示例 1：
+
+输入：n = 1
+输出：true
+解释：20 = 1
+示例 2：
+
+输入：n = 16
+输出：true
+解释：24 = 16
+示例 3：
+
+输入：n = 3
+输出：falseß
+*/
+func isPowerOfTwo(n int) bool {
+	if n <= 0 {
+		return false
+	}
+	for n > 0 {
+		if n == 1 {
+			return true
+		}
+		if n%2 == 1 {
+			return false
+		}
+		n = n / 2
+	}
+	return true
+}
+
+/*
+反转链表
+https://leetcode.cn/problems/reverse-linked-list/description/
+*/
+func reverseList(head *ListNode) *ListNode {
+	var prev *ListNode
+	var tmp *ListNode
+	for head != nil {
+		tmp = &ListNode{Val: head.Val, Next: prev}
+		prev = tmp
+		head = head.Next
+	}
+	return tmp
+
+}
+
+/*
+位1的个数
+https://leetcode.cn/problems/number-of-1-bits/
+*/
+func hammingWeight(n int) int {
+	var res int
+	for n > 0 {
+		res += n % 2
+		n = n / 2
+	}
+	return res
+}
+
+/*
+相交链表
+https://leetcode.cn/problems/intersection-of-two-linked-lists/
+*/
+func getIntersectionNode(headA, headB *ListNode) *ListNode {
+	m := make(map[*ListNode]int)
+	tmpA, tmpB := headA, headB
+	for tmpA != nil {
+		m[tmpA] = 1
+		tmpA = tmpA.Next
+	}
+	for tmpB != nil {
+		if _, ok := m[tmpB]; ok {
+			return tmpB
+		}
+		tmpB = tmpB.Next
+	}
+	return nil
+}
+
+/*
 乘积最大子数组
 https://leetcode.cn/problems/maximum-product-subarray/
 输入: nums = [2,3,-2,4]

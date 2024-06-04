@@ -274,3 +274,52 @@ func Test_sortList(t *testing.T) {
 func Test_maxProduct(t *testing.T) {
 	t.Log(maxProduct([]int{-2, 3, -4}))
 }
+
+func Test_hammingWeight(t *testing.T) {
+	t.Log(hammingWeight(11))
+	t.Log(hammingWeight(128))
+}
+
+func Test_reverseList(t *testing.T) {
+	l := newListNode([]int{1, 2, 3, 4, 5})
+	t.Log(getListNode(reverseList(l)))
+}
+
+func Test_isPowerOfTwo(t *testing.T) {
+	//t.Log(isPowerOfTwo(1))
+	t.Log(isPowerOfTwo(16))
+	//t.Log(isPowerOfTwo(3))
+}
+
+func Test_lowestCommonAncestor2(t *testing.T) {
+	n1 := &TreeNode{Val: 3}
+	n2 := &TreeNode{Val: 5}
+	n3 := &TreeNode{Val: 1}
+	n4 := &TreeNode{Val: 6}
+	n5 := &TreeNode{Val: 2}
+	n6 := &TreeNode{Val: 0}
+	n7 := &TreeNode{Val: 8}
+	n8 := &TreeNode{Val: 7}
+	n9 := &TreeNode{Val: 4}
+	n1.Left = n2
+	n1.Right = n3
+	n2.Left = n4
+	n2.Right = n5
+	n3.Left = n6
+	n3.Right = n7
+	n5.Left = n8
+	n5.Right = n9
+	//t.Log(lowestCommonAncestor2(n1, n9, n2))
+
+	r1 := &TreeNode{Val: 1}
+	r2 := &TreeNode{Val: 2}
+	r1.Left = r2
+	t.Log(lowestCommonAncestor2(r1, r1, r2))
+}
+
+func Test_reverseString(t *testing.T) {
+	str := "hello"
+	bList := []byte(str)
+	reverseString(bList)
+	t.Log(string(bList))
+}
